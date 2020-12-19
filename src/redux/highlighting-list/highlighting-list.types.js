@@ -7,7 +7,7 @@ const HighlightingListActionTypes = {
     ADD_ANNOTATION_DETAIL: 'ADD_ANNOTATION',
     REMOVE_ANNOTATION: 'REMOVE_ANNOTATION',
     ADD_ANNOTATION_HISTORY: 'ADD_ANNOTATION_HISTORY',
-
+    SET_TAG_FILTER: 'SET_TAG_FILTER',
   };
   
 export default HighlightingListActionTypes;

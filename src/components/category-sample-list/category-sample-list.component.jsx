@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { connect } from 'react-redux';
 
@@ -12,16 +12,22 @@ import { CategorySampleListLayout } from './category-sample-list.styles';
 
 import { selectArticleDirectoryAndCategoryInfoAsList} from '../../redux/article-directory/article-directory.selectors';
 
-const CategorySampleList = ({categorySamples}) =>  (
-    <CategorySampleListLayout>
-        {categorySamples.map(({ contents : {id, ...otherCollectionProps }, meta: { description, linkUrl, name }}) => (
-            <CategorySample key={_getUniqueId()} description={description} linkUrl={linkUrl} name={name} {...otherCollectionProps} />
-        ))}
-    </CategorySampleListLayout>
-);
+const CategorySampleList = ({categorySamples}) =>  {
+
+    useEffect(()=>  {
+        window.scrollTo(0, 0);
+      },[]);
+      
+    return(
+        <CategorySampleListLayout>
+            {categorySamples.map(({ contents : {id, ...otherCollectionProps }, meta: { description, linkUrl, name }}) => (
+                <CategorySample key={_getUniqueId()} description={description} linkUrl={linkUrl} name={name} {...otherCollectionProps} />
+            ))}
+        </CategorySampleListLayout>
+    );
+}
 
 const mapStateToProps = createStructuredSelector({  
-    //categorySamples: selectCategoriesAsList,
     categorySamples: selectArticleDirectoryAndCategoryInfoAsList
 });
 

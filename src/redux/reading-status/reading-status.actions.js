@@ -15,3 +15,9 @@ export const updateProgressAtReadingStatus = progress => ({
 
 });
 
+export const updateProgressAtTextBlockId = progress => ({
+  type: ReadingStatusActionTypes.UPDATE_PROGRESS_AT_TEXT_BLOCK_ID,
+  payload: progress
+
+});
+

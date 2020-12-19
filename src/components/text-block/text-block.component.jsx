@@ -24,6 +24,7 @@ import { setCurrentAnnotatedItem,
          setAnnotationPanelReadMode } from '../../redux/annotation-panel/annotation-panel.actions';
 
 import { selectParagraphHighlighting, 
+         selectParagraphSelectionHighlightings, 
          selectTextBlockAnnotation } from '../../redux/highlighting-list/highlighting-list.selectors';
 
 import { selectIsTextBlockActive } from '../../redux/annotation-panel/annotation-panel.selectors';
@@ -34,6 +35,23 @@ import { selectAnnotationPanelEditMode,
 import { selectVisualConfigurationData } from '../../redux/visual-configuration/visual-configuration.selectors';
 
 
+const close_span = (text, ending_word) => {  //function that removes punctuation from last word of selection
+
+  if(ending_word) {
+    let pos = text.length-1;
+    let punctuation = "";
+    while(" .,;:!?".indexOf(text[pos]) > -1 && pos >= 0) {
+      punctuation = text[pos] + punctuation;
+      --pos;
+    }
+
+  
+    return(text.slice(0,pos+1)+"</span>"+punctuation);
+  } else {
+    return(text+"</span>");
+  }
+}
+
 const TextBlock = ({ textBlockId, 
                      articleId, 
                      categoryStrId,
@@ -43,6 +61,7 @@ const TextBlock = ({ textBlockId,
                      remove_paragraph_highlighting, 
                      annotationPanelEditMode, 
                      paragraphHighlighting, 
+                     paragraphSelectionHighlightings, 
                      setCurrentAnnotatedItem,
                      setAnnotationPanelVisible, 
                      setAnnotationPanelHidden, 
@@ -51,12 +70,181 @@ const TextBlock = ({ textBlockId,
                      setAnnotationPanelReadMode,
                      isTextBlockActive,
                      currentVisualConfigurationData}) => {
+                    
+
 
     const [highlighted, sethighlight] = useState(false);
     
     const {font, font_size }  =  currentVisualConfigurationData;
-    console.log(font);
     
+    let text = children;
+
+    
+
+    const filter_special = (text) => {
+
+      let result=[];
+  
+      let found = true;
+      while(found) {
+        if(text[0] == '>' || text[0] == '#' || text[0] == '-' ) {
+          result.push({t: text[0], s: false, h:false, color:null});
+          text = text.slice(1);
+        } else {
+          found = false;
+        }
+      }
+  
+      found = true;
+      
+      let pos;
+      let result2=result;
+
+      while(found) {
+        pos = text.indexOf('*');
+
+        if(pos > -1) {
+          
+          if(pos == 0) {
+            result2.push({t: text[0], s: false, h:false, color:null});
+            text = text.slice(1);
+          }
+          else {
+            if(text[pos-1] != '\\') {
+              result2.push({t: text.slice(0, pos), s: true, h:false, color:null});
+              result2.push({t: text[pos], s: false, h:false, color:null});
+              
+              text = text.slice(pos+1);
+            }
+          }
+            
+        } else {
+          found = false;
+          result2.push({t: text, s: true, h:false, color:null});
+        }
+
+      }    
+
+      return(result2);
+
+    }
+
+    let text_result = "";
+
+    if(paragraphSelectionHighlightings.length) {
+
+      let textSplit = text.split(" ");
+      textSplit = textSplit.map((t, i) => {return (i<textSplit.length-1)? t+" ":t});
+
+      let textSplit_m = [];
+      let filtered_text = "";
+
+      let pos = 0;
+      textSplit.map(t => {
+
+        filter_special(t).map(b=>{
+          b.pos = pos;
+          textSplit_m.push(b); 
+          if(b.s) {
+            filtered_text += b.t;
+            pos += b.t.length;
+          }
+          
+        })
+
+      });
+
+      
+      paragraphSelectionHighlightings.map(
+        h => {
+          let stringSplit = h.selectionString.split(" ");
+          stringSplit = stringSplit.map((t, i) => {return(i<stringSplit.length-1)? t+" ":t});
+          const pos = filtered_text.indexOf(h.selectionString);
+
+          // lets match stringSplit vector and textSplit vector
+
+          let last_ind_o1 = 0 ;
+          let ind_o1 = 0;
+          let l1_broken = false;
+          let l2_broken = false;
+          let h_i = [];
+          let success = false;
+
+
+            while(!success && !l2_broken) {
+              
+              let ind_o2 = 0;
+              ind_o1 = last_ind_o1+1;
+
+              h_i = [];
+              l1_broken = false;
+
+              if(ind_o1 >= textSplit_m.length ) {
+                l2_broken = true;
+              } else {
+                while(ind_o1 < textSplit_m.length && !textSplit_m[ind_o1].s) {
+                  ++ind_o1;
+
+                }
+
+                while(!l1_broken && !success) {
+
+                  if(textSplit_m[ind_o1].pos > h.offset - 5 && 
+                    
+                    ( textSplit_m[ind_o1].t == stringSplit[ind_o2]
+                    ||
+                     (ind_o2 == stringSplit.length-1 && textSplit_m[ind_o1].t.startsWith(stringSplit[ind_o2])  )
+                    ||
+                      (ind_o2 == 0 && textSplit_m[ind_o1].t.endsWith(stringSplit[ind_o2]))
+                    ) 
+                    
+                    ){
+                    last_ind_o1 = ind_o1;
+                    h_i.push(ind_o1);
+
+                    ++ind_o1;
+                    while(ind_o1 < textSplit_m.length && !textSplit_m[ind_o1].s) {
+                      ++ind_o1;
+                    }
+
+                    ++ind_o2;
+                    if(ind_o2 >= stringSplit.length) {
+                      success = true
+                    }
+                  } else {
+                  
+                    l1_broken=true;
+                    last_ind_o1=ind_o1;
+
+                  }
+               
+                }
+              }
+            }
+
+          h_i.map((i, ind) => { 
+            textSplit_m[i].h = true; 
+            textSplit_m[i].color = h.currentColor
+            textSplit_m[i].final = false;
+            if(ind==h_i.length-1) {
+              textSplit_m[i].final = true;
+            }
+          });
+
+        });
+
+      textSplit_m.map(
+        (w, i) => {
+          text_result += w.h? "<span style='backgroundColor:"+w.color+"'>"+close_span(w.t, w.final) : w.t;
+    
+      });
+
+      text_result = text_result.replaceAll(" <span", "<span>&nbsp;</span><span");
+
+    } else {
+      text_result = text;
+    }
+
 
     const highlightChange = () => {
         const  highlighting = {tags: "highlighting",  textBlockId: textBlockId, scrollTop: document.documentElement.scrollTop}
@@ -93,8 +281,6 @@ const TextBlock = ({ textBlockId,
     } 
 
   }
-  
-
 
     const highlightOn = () => sethighlight(true);
     const highlightOff = () => sethighlight(false);
@@ -149,7 +335,7 @@ const TextBlock = ({ textBlockId,
     
      if(paragraphHighlighting) highlightOn();
      
-    
+        
 
     },[]);
 
@@ -162,7 +348,7 @@ const TextBlock = ({ textBlockId,
    
     
     return (
-      <div  onMouseOver={viewAnnotation} className={highlighted ? (isTextBlockActive? 'active':'highlighted-on') : 'highlighted-off'}>
+      <div id={textBlockId} onMouseOver={viewAnnotation} className={highlighted ? (isTextBlockActive? 'active':'highlighted-on') : 'highlighted-off'}>
           <div className="dt w-100  b--black-05 pb2"> 
 	          <div className="dtc w2 w3-ns v-mid">
               <SmallButton onClick={highlightChange}>{highlighted? <Icon icon="data-decrease"></Icon>:<Icon icon="edit2"></Icon>}</SmallButton>
@@ -170,8 +356,8 @@ const TextBlock = ({ textBlockId,
             </div>
 
             <div className="dtc v-mid pl3">
-              <div className={font + " " + font_size + " fw1 black mv0"}>
-                <Markdown  options={markdown_options} >{children}</Markdown>
+              <div text-block-id={textBlockId} className={font + " " + font_size + " fw1 black mv0"}>
+                <Markdown  options={markdown_options} >{text_result}</Markdown>
               </div>
             </div>
 	      </div>
@@ -185,6 +371,7 @@ const TextBlock = ({ textBlockId,
 
 const mapStateToProps = (state, ownProps) => ({   
     paragraphHighlighting: selectParagraphHighlighting(ownProps.articleId,ownProps.textBlockId)(state),
+    paragraphSelectionHighlightings: selectParagraphSelectionHighlightings(ownProps.articleId, ownProps.textBlockId)(state),
     textBlockAnnotation: selectTextBlockAnnotation(ownProps.articleId, ownProps.textBlockId)(state),
     annotationPanelEditMode: selectAnnotationPanelEditMode(state),
     isTextBlockActive: selectIsTextBlockActive(ownProps.articleId,ownProps.textBlockId)(state),

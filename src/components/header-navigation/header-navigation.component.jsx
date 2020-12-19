@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { withRouter } from 'react-router-dom';
 
@@ -36,12 +36,20 @@ import { toggleReadingListHidden } from '../../redux/reading-list/reading-list.a
 import { toggleVisualConfigurationPanelHidden } from '../../redux/visual-configuration/visual-configuration.actions.js';
 
 
-const HeaderNavigation = ({currentUser, hidden, readingListElementCount, annotationElementCount, history, match, annotationPanelHidden, annotationListPanelHidden, toggleReadingListHidden, toggleAnnotationPanelHidden, toggleAnnotationListPanelHidden, visualConfigurationPanelHidden, toggleVisualConfigurationPanelHidden}) => (
+const HeaderNavigation = ({currentUser, hidden, readingListElementCount, annotationElementCount, history, match, annotationPanelHidden, annotationListPanelHidden, toggleReadingListHidden, toggleAnnotationPanelHidden, toggleAnnotationListPanelHidden, visualConfigurationPanelHidden, toggleVisualConfigurationPanelHidden}) => {
+
+    useEffect(()=>  {
+        if ("scrollRestoration" in window.history) {
+            window.history.scrollRestoration = "manual"
+          }
+    },[]);
+
+    return (
     <HeaderContainer>
         <HeaderLayout>
             <LogoContainer onClick={() => history.push(`${ROUTE_PATHS.root}`)}>
         
-                REACT.STUDYBOARD
+                STUDYBOARD
 
             </LogoContainer>
         
@@ -91,7 +99,8 @@ const HeaderNavigation = ({currentUser, hidden, readingListElementCount, annotat
         </HeaderLayout>
     </HeaderContainer>
 
-)
+    )
+}
 
 
 const mapStateToProps = createStructuredSelector({  

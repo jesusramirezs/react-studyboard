@@ -19,7 +19,7 @@ position:relative;
 
 &:focus {
   outline: none;
-  background-color: #ddd;
+  background-color: #f7f7f7;
 }
 
 
@@ -37,13 +37,13 @@ font-size: 16px;
 font-weight: normal;
 position: absolute;
 pointer-events: none;
-left: 5px;
+left: 0px;
 top: 10px;
 transition: 300ms ease all;
 
 &.shrink {
-  top: -24px;
-  font-size: 12px;
+  top: -40px;
+  font-size: 16px;
   color: $main-color;
   
 

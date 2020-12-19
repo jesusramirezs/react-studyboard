@@ -14,6 +14,8 @@ import AnnotationListPanelElement from '../annotation-list-panel-element/annotat
 
 import { Drawer, Button } from 'rsuite';
 
+import { Form, FormGroup, ControlLabel, FormControl, Checkbox, CheckboxGroup } from 'rsuite';
+
 import 'rsuite/dist/styles/rsuite-default.css';
 
 import { SpinnerContainer, SpinnerOverlay } from '../loading-status/loading-status.styles';
@@ -22,14 +24,47 @@ import { selectAnnotationsHistory } from '../../redux/highlighting-list/highligh
 
 import { selectAnnotationListPanelHidden } from '../../redux/highlighting-list/highlighting-list.selectors';
 
+import { selectTagFilter } from '../../redux/highlighting-list/highlighting-list.selectors';
+
 import { selectIsArticleDirectoryLoaded } from '../../redux/article-directory/article-directory.selectors';
 
 import { fetchArticleDirectoryStartAsync } from '../../redux/article-directory/article-directory.actions';
 
 import { toggleAnnotationListPanelHidden } from '../../redux/highlighting-list/highlighting-list.actions';
 
+import { setTagFilter } from '../../redux/highlighting-list/highlighting-list.actions';
 
-const AnnotationListDrawer = ({ annotationsHistory, isLoaded, toggleAnnotationListPanelHidden, annotationListPanelHidden, fetchArticleDirectoryStartAsync, history }) => {
+
+
+
+const FilterForm = ({setupTagFilter, setTagFilter}) => {
+    
+    return (<div>
+      <Form formValue={{tags: setupTagFilter}} onChange={formValue => {setTagFilter(formValue.tags)}}>
+
+        <FormGroup>
+          <ControlLabel>Filter Tags</ControlLabel>
+          <FormControl
+            name="tags"
+            accepter={CheckboxGroup}>
+
+            <Checkbox value="question"><span className="f6 ">question</span></Checkbox>
+            <Checkbox value="read"><span className="f6">read</span></Checkbox>
+            <Checkbox value="highlight"><span className="f6 ">highlight</span></Checkbox>
+            <Checkbox value="others"><span className="f6 ">...others</span></Checkbox>
+
+
+          </FormControl>
+        </FormGroup>
+
+
+      </Form>
+    </div>);
+};
+
+
+
+const AnnotationListDrawer = ({ annotationsHistory, tagFilter, setTagFilter, isLoaded, toggleAnnotationListPanelHidden, annotationListPanelHidden, fetchArticleDirectoryStartAsync, history }) => {
 
 
   useEffect(()=>  {
@@ -40,7 +75,6 @@ const AnnotationListDrawer = ({ annotationsHistory, isLoaded, toggleAnnotationLi
 
 
   return(        
-
 
     <div>
       <Drawer
@@ -55,21 +89,34 @@ const AnnotationListDrawer = ({ annotationsHistory, isLoaded, toggleAnnotationLi
         </Drawer.Header>
 
         <Drawer.Body>
+        <FilterForm setupTagFilter={tagFilter} setTagFilter={setTagFilter} />
+        <hr/>
+        <br/>
+          { isLoaded? 
+            
+            annotationsHistory.length ? (
+              annotationsHistory.filter(e => 
+                {
+                  return ((!e.annotation.tags.length && tagFilter.includes('others') ) ||
+                    e.annotation.tags
+                    .filter(t => tagFilter.includes(t) || (tagFilter.includes('others') && !['read','question','highlight'].includes(t)) )
+                    .length)
+                })
+                .map(annotationHistoryElement => <AnnotationListPanelElement key={annotationHistoryElement.id} element={annotationHistoryElement} />)
+            )
 
-          { isLoaded?
-              annotationsHistory.length ? (
-                annotationsHistory.map(annotationHistoryElement => <AnnotationListPanelElement key={annotationHistoryElement.id} element={annotationHistoryElement} />)
-              )
-              :
-              (
-                <span className='pa5 empty-message'>Your notes list is empty</span>
-               )
+          :
+          (
+            <span className='pa5 empty-message'>Your notes list is empty</span>
+          )
+               
+              
             :
               <SpinnerOverlay>
                 <SpinnerContainer />
               </SpinnerOverlay>
-
-            }
+              
+          }
      
         </Drawer.Body>
 
@@ -86,13 +133,14 @@ const AnnotationListDrawer = ({ annotationsHistory, isLoaded, toggleAnnotationLi
 const mapStateToProps = createStructuredSelector({  
     annotationsHistory: selectAnnotationsHistory,
     annotationListPanelHidden: selectAnnotationListPanelHidden,
-    isLoaded: selectIsArticleDirectoryLoaded  //el primer currentUser podría llamarse de otra forma, pero tiene que coincidir con la props que especificamos en la definicion de Header
-
+    isLoaded: selectIsArticleDirectoryLoaded,  
+    tagFilter: selectTagFilter
 });
 
 const mapDispatchToProps = dispatch => ({
     toggleAnnotationListPanelHidden: () => dispatch(toggleAnnotationListPanelHidden()),
-    fetchArticleDirectoryStartAsync: () => dispatch(fetchArticleDirectoryStartAsync())
+    fetchArticleDirectoryStartAsync: () => dispatch(fetchArticleDirectoryStartAsync()),
+    setTagFilter: (tagFilter) => dispatch(setTagFilter(tagFilter))
 
 });
 

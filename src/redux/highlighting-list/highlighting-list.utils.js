@@ -1,22 +1,29 @@
 import { _getUniqueId } from '../../utils/utils';
 
-export const _addSelectionHighlighting = (highlighlingMap, highlighlingToAdd) => {
+export const _addSelectionHighlighting = (highlightingMap, highlightingToAdd) => {
 
-    const existingArticleHighlightings = highlighlingMap[highlighlingToAdd.articleId];
+    const existingArticleHighlightings = highlightingMap[highlightingToAdd.articleId];
 
-    const newHighlighlingMap = Object.assign({}, highlighlingMap);
+    const newHighlightingMap = Object.assign({}, highlightingMap);
 
     if(existingArticleHighlightings) {
 
-        newHighlighlingMap[highlighlingToAdd.articleId].push(highlighlingToAdd.highlighting);
-        return newHighlighlingMap;
+        if(newHighlightingMap[highlightingToAdd.articleId][highlightingToAdd.highlighting.textBlockId])
+            newHighlightingMap[highlightingToAdd.articleId][highlightingToAdd.highlighting.textBlockId].push(highlightingToAdd.highlighting);
+        else 
+            newHighlightingMap[highlightingToAdd.articleId][highlightingToAdd.highlighting.textBlockId] = [highlightingToAdd.highlighting];
+        return newHighlightingMap;
+
         
     } else {
+        newHighlightingMap[highlightingToAdd.articleId] = {}
+        newHighlightingMap[highlightingToAdd.articleId][highlightingToAdd.highlighting.textBlockId] =  [highlightingToAdd.highlighting];
+        return newHighlightingMap;
 
-        newHighlighlingMap[highlighlingToAdd.articleId] = [highlighlingToAdd.highlighting];
-        return newHighlighlingMap;
+
     }
 }
+
 
 
 

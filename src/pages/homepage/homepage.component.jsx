@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import CategoryList from '../../components/category-list/category-list.component';
 
@@ -7,13 +7,19 @@ import CurrentArticle  from '../../components/current-article/current-article.co
 import { HomePageContainer } from './homepage.styles';
 
 
-
-const HomePage = () => (
+const HomePage = () => {
   
-  <HomePageContainer>
-      <CurrentArticle />
-      <CategoryList />
-  </HomePageContainer>
-);
+  useEffect(()=>  {
+    window.scrollTo(0, 0);
+  },[]);
+
+  return(
+  
+    <HomePageContainer>
+        <CurrentArticle />
+        <CategoryList />
+    </HomePageContainer>
+  );
+}
 
 export default HomePage;

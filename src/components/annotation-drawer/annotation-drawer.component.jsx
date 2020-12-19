@@ -41,7 +41,7 @@ const AnnotationDrawer = ({currentAnnotationData, annotationPanelEditMode, annot
 
 
         {annotationPanelEditMode? 
-          <AnnotationForm   setupAnnotationData={currentAnnotationData}/>
+          <AnnotationForm key="form_editor"  setupAnnotationData={currentAnnotationData}/>
         :
           <AnnotationInfo   setupAnnotationData={currentAnnotationData}/>
         }     

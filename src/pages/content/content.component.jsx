@@ -12,7 +12,7 @@ import CategorySampleListContainer from '../../components/category-sample-list/c
 
 import CategoryContainer from '../../components/category/category.container';
 
-import ArticleContainer from '../../components/article/article.container';
+import ArticleFromUrlContainer from '../../components/article-from-url/article-from-url.container';
 
 import { fetchArticleDirectoryStartAsync } from '../../redux/article-directory/article-directory.actions';
 
@@ -27,19 +27,20 @@ const ContentPage = ({match, fetchArticleDirectoryStartAsync, isLoaded}) => {
 
     },[]);
 
-
+    
     return(        
         <div>
-            <Switch>
+
+            <Switch>        
                 <Route exact path={ROUTE_PATHS.root+ROUTE_PATHS.content} component={CategorySampleListContainer}  />
-                <Route path={`${ROUTE_PATHS.root+ROUTE_PATHS.content}:categoryStrId/:articleStrId/:position`}  component={ArticleContainer}/>
-                <Route path={`${ROUTE_PATHS.root+ROUTE_PATHS.content}:categoryStrId/:articleStrId`}  component={ArticleContainer}/>            
+                <Route path={`${ROUTE_PATHS.root+ROUTE_PATHS.content}:categoryStrId/:articleStrId/:textBlockId`}  component={ArticleFromUrlContainer}/>
+                <Route path={`${ROUTE_PATHS.root+ROUTE_PATHS.content}:categoryStrId/:articleStrId`}  component={ArticleFromUrlContainer}/>            
                 <Route path={`${ROUTE_PATHS.root+ROUTE_PATHS.content}:categoryStrId`}  component={CategoryContainer}/>
             
             </Switch>
+
         </div>
     );
-      
         
 }
         

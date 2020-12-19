@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { connect } from 'react-redux';
 
+
 import TextInput from '../text-input/text-input.component';
 
 import CustomButton from '../custom-button/custom-button.component';
@@ -27,7 +28,8 @@ const AnnotationForm = ({ setupAnnotationData, setAnnotationPanelReadMode, add_a
     const { note } = annotation;
 
     const { categoryStrId, articleId, articleStrId, textBlockId, type, scrollTop } = setupAnnotationData;
-
+    
+    
      
     const handleSubmit = async event => {
       event.preventDefault();
@@ -90,6 +92,7 @@ const AnnotationForm = ({ setupAnnotationData, setAnnotationPanelReadMode, add_a
           <form onSubmit={handleSubmit}>
             <br/>
             <TextInput
+              key='textinput'
               name='note'
               type='text'
               handleChange={handleChange}

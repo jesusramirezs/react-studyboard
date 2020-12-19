@@ -104,14 +104,21 @@ There are **still many points of improvement and evolution in the project**:
 
 <h2>From the functional point of view.</h2>
 
-- Allow highlighting of any word selection, not just whole paragraphs, and allow annotations on them.
+- Allow annotations on highlighting of any word selection.
 - Allow the sharing of notes between different students.
 - Allow several tabs to keep reading several articles at once. Perhaps use a splitter in the reading panel to have two or more articles active.
 - Improve the management of image uploads to the cloud.
 - Add night mode for reading.
-- Filter the side panel annotations according to tags. For example: display only "questions" or "re-readings.
 - The possibility of publishing your articles (summaries, reflections) and dynamically integrating notes on other articles into the content.
 - The possibility to export/import annotations in the JSON file.
+
+EDIT: Dec 19, 2020
+
+v1.1:
+
+- *Accomplished*: Filter the side panel annotations according to tags. For example: display only "questions" or "re-readings.
+- *Accomplished*: Allow highlighting of any word selection, not just whole paragraphs.
+- *Accomplished*: Improved behaviour os scroll restoration mechanism.
 
 <h2>From the technical point of view.</h2>
 

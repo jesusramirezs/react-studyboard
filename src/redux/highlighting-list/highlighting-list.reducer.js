@@ -1,12 +1,10 @@
 import HighlightingListActionTypes from './highlighting-list.types';
 
-
 import {_addSelectionHighlighting, 
         _addParagraphHighlighting, 
         _removeParagraphHighlighting, 
         _addAnnotationDetail,
         _addAnnotationHistory} from './highlighting-list.utils.js';
-
 
 
 const INITIAL_STATE = {
@@ -18,7 +16,9 @@ const INITIAL_STATE = {
     selectionHighlightings: {},
     paragraphHighlightings: {},
     annotations: {}, 
-    annotationsHistory: []
+    annotationsHistory: [],
+    tagFilter: ['question','read','highlight','others'],
+    highlightings: {}
 }
 
 
@@ -36,6 +36,7 @@ const HighlightingListReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 highlightings: _addSelectionHighlighting(state.highlightings, action.payload)
+                
                     
             }       
             
@@ -61,6 +62,12 @@ const HighlightingListReducer = (state = INITIAL_STATE, action) => {
                 return {
                     ...state,
                     annotationsHistory: _addAnnotationHistory(state.annotationsHistory, action.payload)
+                        
+                }     
+        case HighlightingListActionTypes.SET_TAG_FILTER:
+                return {
+                    ...state,
+                    tagFilter: action.payload
                         
                 }     
 

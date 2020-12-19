@@ -15,12 +15,10 @@ import highlightingListReducer from './highlighting-list/highlighting-list.reduc
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['readingListStorage', 'highlightingListStorage', 'readingStatusStorage', 'visualConfigurationStorage']
+    whitelist: ['readingListStorage', 'readingStatusStorage', 'visualConfigurationStorage', 'highlightingListStorage']
 
 }
-
 //
-
 
 
 const rootReducer = combineReducers({

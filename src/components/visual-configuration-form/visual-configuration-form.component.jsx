@@ -37,14 +37,14 @@ const VisualConfigurationForm = ({ setupVisualConfigurationData, setVisualConfig
         
 
       } catch (error) {
-        console.log(error);
+        
       }
     };
   
 
       const handleChange = event => {
         const { value, name } = event;
-        console.log(event);
+        
         setVisualConfigurationState({ ...visualConfiguration, [name]: value });
       };
 

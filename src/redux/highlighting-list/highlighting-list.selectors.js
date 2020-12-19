@@ -9,14 +9,12 @@ const selectHighlightingListStorage = state => state.highlightingListStorage;
 export const selectSelectionHighlightings = createSelector(
     [selectHighlightingListStorage],
     content => content.highlightings
-
 );
 
 
 export const selectAnnotationListPanelHidden = createSelector(
     [selectHighlightingListStorage],
     content => content.hidden
-
 )
 
 
@@ -27,13 +25,29 @@ export const selectArticleSelectionHighlightings = (articleId) => createSelector
         const articleHighlightings = highlightingsMap ? highlightingsMap[articleId]: null;
         return(articleHighlightings? articleHighlightings : []);
     }
-
 );
+
+
+export const selectParagraphSelectionHighlightings = (articleId, textBlockId) => createSelector(
+    [selectSelectionHighlightings],
+
+    paragrapSelectionHighlightingsMap => {
+        const highlightings = 
+            paragrapSelectionHighlightingsMap? 
+                (paragrapSelectionHighlightingsMap[articleId] ? 
+                    paragrapSelectionHighlightingsMap[articleId][textBlockId]
+                : [])
+            : [] 
+        return(highlightings? highlightings:[]);
+        
+    }
+);
+
+
 
 export const selectParagraphHighlightings = createSelector(
     [selectHighlightingListStorage],
     content => content.paragraphHighlightings
-
 );
 
 
@@ -45,7 +59,6 @@ export const selectArticleParagraphHighlightings = (articleId) => createSelector
         const articleParagraphHighlightings = paragrapHighlightingsMap ? paragrapHighlightingsMap[articleId]: null;
         return(articleParagraphHighlightings? articleParagraphHighlightings : []);
     }
-
 );
 
 
@@ -58,20 +71,18 @@ export const selectParagraphHighlighting = (articleId, textBlockId) => createSel
         : false  
         
     }
-
 );
 
 
 export const selectAnnotations = createSelector(
     [selectHighlightingListStorage],
     content => content.annotations
-
 );
 
 
 export const selectAnnotationElementsCountIncorrect = createSelector(
     [selectAnnotations, selectParagraphHighlightings],
-    
+  
 
     (annotationElements, paragraphHighlightingsMap) => {
 
@@ -92,8 +103,6 @@ export const selectAnnotationElementsCountIncorrect = createSelector(
 
 export const selectAnnotationElementsCount = createSelector(
     [selectHighlightingListStorage, selectParagraphHighlightings],
-
-
 
     (content, paragraphHighlightingsMap ) => {
         const alreadyShown = [];
@@ -137,7 +146,6 @@ export const selectTextBlockAnnotation = (articleId, textBlockId) => createSelec
             return {}
         
     }
-
 );
 
 
@@ -158,10 +166,6 @@ export const  selectCurrentAnnotationData = createSelector(
     
     }
 );
-
-
-
-
 
 
 
@@ -210,6 +214,14 @@ export const selectAnnotationsHistory = createSelector(
     }
 
 
+    );
+
+
+
+    export const selectTagFilter = createSelector(
+        [selectHighlightingListStorage],
+        content => content.tagFilter
+    
     );
 
 

@@ -11,7 +11,7 @@ import { TagSpan } from './annotation-list-panel-element.styles';
 import { AnnotationListPanelElementLayout, AnnotationListPanelElementImg } from './annotation-list-panel-element.styles';
 
 
-const AnnotationListPanelItem = ({element: {thumbUrl, summary, categoryStrId, articleStrId, scrollTop, title, annotation: {note, tags}}, history}) => {
+const AnnotationListPanelItem = ({element: {thumbUrl, summary, categoryStrId, articleStrId, textBlockId, scrollTop, title, annotation: {note, tags}}, history}) => {
     const bg_style = tag => {
         switch(tag) {
          case 'question': return 'bg-blue';
@@ -24,7 +24,7 @@ const AnnotationListPanelItem = ({element: {thumbUrl, summary, categoryStrId, ar
     return (
 
     <AnnotationListPanelElementLayout>
-        <div className="pointer" onClick={() => history.push(`${ROUTE_PATHS.root+ROUTE_PATHS.content+categoryStrId}/${articleStrId}/${scrollTop}`)}>
+        <div className="pointer" onClick={() => history.push(`${ROUTE_PATHS.root+ROUTE_PATHS.content+categoryStrId}/${articleStrId}/${textBlockId}`)}>
             <div className="dtc w2 w3-ns v-top">
     
                 <img alt='element' src={ASSETS_PATH+thumbUrl} className="br2 h3 w3 dib" alt="avatar" />

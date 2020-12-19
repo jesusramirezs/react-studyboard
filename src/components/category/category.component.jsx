@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { connect } from 'react-redux';
 
@@ -14,6 +14,10 @@ const Category = ({articleElements, categoryInfo}) => {
 
     const elements = articleElements;
     const { title } = categoryInfo;
+
+    useEffect(()=>  {
+        window.scrollTo(0, 0);
+      },[]);
 
     return(
     <ArticleListLayout>

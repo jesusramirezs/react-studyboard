@@ -8,7 +8,7 @@ import { selectIsArticleDirectoryLoaded } from '../../redux/article-directory/ar
 
 import LoadingPresentation from '../../components/loading-status/loading-status.component';
 
-import Article from './article.component';
+import ArticleFromUrl from './article-from-url.component';
 
 const mapStateToProps = createStructuredSelector({
   
@@ -16,9 +16,9 @@ const mapStateToProps = createStructuredSelector({
 
 });
 
-const ArticleContainer = compose(
+const ArticleFromUrlContainer = compose(
   connect(mapStateToProps),
   LoadingPresentation
-)(Article);
+)(ArticleFromUrl);
 
-export default ArticleContainer;
+export default ArticleFromUrlContainer;

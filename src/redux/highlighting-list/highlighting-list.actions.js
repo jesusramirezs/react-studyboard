@@ -49,3 +49,11 @@ export const addAnnotationHistory = annotationHistory => ({
   payload: annotationHistory
 
 });
+
+
+export const setTagFilter = tagFilter => ({
+  type: HighlightingListActionTypes.SET_TAG_FILTER,
+  payload: tagFilter
+
+
+});

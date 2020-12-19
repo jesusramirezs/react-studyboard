@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 import '../../css/tachyons/css/tachyons.css';
 
-export const HeaderContainer = styled.div.attrs({ className: 'bg-white bb b--black-20 fixed w-100 ph3 pv2 ph4-m ph5-l avenir' })``
+export const HeaderContainer = styled.div.attrs({ className: 'bg-white bb b--black-20 w-100 ph3 pv2 ph4-m ph5-l fixed avenir' })``
 
 export const HeaderLayout = styled.nav.attrs({ className: 'db dt-l w-100 border-box pa3 ph5-l' })``
 
-export const LogoContainer = styled.h3.attrs({ className: 'athelas pointer link dim w-25-l' })``
+export const LogoContainer = styled.h4.attrs({ className: 'athelas pointer link dim w-25-l' })``
 
 export const OptionsContainer = styled.div.attrs({ className: 'left db dtc-l v-mid w-100 w-50-l' })``
 
